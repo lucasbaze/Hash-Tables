@@ -89,7 +89,36 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        # Check if the item exists
+        if self.storage[index] is not None:
+            
+            head = self.storage[index]
+
+            if head.next is None: 
+                # We are at the head and can therefore just remove it
+                self.storage[index] = None
+            else: 
+                # We are in a linkedlist and need to traverse 
+                # first check the head of the list
+                if head.key == key:
+                    self.storage[index] = head.next
+
+                else: 
+                    prev = head
+                    current = prev.next
+
+                    while current is not None: 
+                        # check for the right key 
+                        if key == current.key:
+                            # If so, replace with None
+                            prev.next = current.next
+
+                        current = current.next
+                
+        # if item doesn't exists return None
+        else: 
+            return None
 
 
     def retrieve(self, key):
@@ -130,10 +159,14 @@ class HashTable:
         '''
         old_storage = self.storage
         self.capacity *= 2
-        self.storage = [None] * capacity
+        self.storage = [None] * self.capacity
 
-        for item in old_storage:
-            self.insert(item[0], item[1])
+        for node in old_storage:
+            if node:
+                curr = node
+                while curr:
+                    self.insert(curr.key, curr.value)
+                    curr = curr.next
 
 
 if __name__ == "__main__":
